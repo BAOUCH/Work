@@ -1,0 +1,34 @@
+body {
+  margin: 0;
+  padding: 0;
+  height: 1000vh; /* Plus de hauteur pour permettre le défilement */
+  overflow-x: hidden;
+}
+
+.container {
+  display: flex; /* Utilise le flexbox pour disposer la carte et les informations côte à côte */
+  position: fixed; /* Fixe le conteneur à l'écran */
+  top: 20px; /* Positionne le conteneur à 20px du haut */
+  left: 20px; /* Positionne le conteneur à 20px de gauche */
+  z-index: 1; /* Assure que le conteneur est au-dessus d'autres éléments */
+}
+
+#map {
+  height: 570px; /* La carte occupe toute la hauteur définie */
+  width: 800px; /* La carte occupe toute la largeur définie */
+}
+
+.info {
+  margin-left: 20px; /* Espace entre la carte et le texte */
+  max-width: 300px; /* Limite la largeur du texte */
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 16px;
+  line-height: 1.5;
+}
