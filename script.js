@@ -1,6 +1,6 @@
 // Initialisation de la carte avec désactivation du zoom par défilement
 const map = L.map('map', {
-    scrollWheelZoom: false // Désactive le zoom avec la molette de défilement
+    //scrollWheelZoom: false // Désactive le zoom avec la molette de défilement
 }).setView([31.7917, -7.0926], 5); // Position initiale
 
 // Ajout d'une couche de carte
@@ -33,8 +33,18 @@ L.geoJSON(eco, {
         ecoPolygons.push(layer); // Stocker chaque polygone
 
         // Lier une popup au polygone avec le nom
-        if (feature.properties && feature.properties.Name) {
-            layer.bindPopup(feature.properties.Name); // Lier la popup avec le nom du polygone
+        if (feature.properties) {
+            const name = feature.properties.Name || "Nom non disponible";
+            const surface = feature.properties.Surface ? feature.properties.Surface.toFixed(2) : "Surface non disponible"; // Formater la superficie avec deux décimales
+            const nbr_etud = feature.properties.nbr_etud || "Nbr non disponible";
+            // Créer le contenu de la popup
+            const popupContent = `
+                <strong>Nom :</strong> ${name} <br>
+                <strong>Superficie :</strong> ${surface} m²<br>
+                <strong>Nombre des etudiants:</strong> ${nbr_etud} <br>
+            `;
+            
+            layer.bindPopup(popupContent); // Lier le contenu de la popup au polygone
         }
     }
 }).addTo(map);
@@ -47,8 +57,9 @@ map.fitBounds(bounds); // Ajuster la carte pour afficher tous les polygones
 function updateLocationInfo(index) {
     if (index < ecoPolygons.length) {
         const featureName = ecoPolygons[index].feature.properties.Name || `Polygone ${index + 1}`;
-        document.getElementById('location-title').innerText = `Position: ${featureName}`;
-        document.getElementById('location-description').innerText = ecoPolygons[index].feature.properties.description || "Description non disponible.";
+        const featureDesc = ecoPolygons[index].feature.properties.Desc || `Polygone ${index + 1}`;
+        document.getElementById('location-title').innerText = `Universite: ${featureName}`;
+        document.getElementById('location-description').innerText = `Description: ${featureDesc}` || "Description non disponible.";
     }
 }
 
@@ -93,3 +104,16 @@ function updateMapPosition(index) {
         updatePolygonStyles(index);
     }
 }
+
+// Fonction pour détecter la fin du défilement
+window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    const maxScroll = document.body.scrollHeight - window.innerHeight;
+
+    // Si on est proche de la fin du défilement (à 95% du défilement)
+    if (scrollY / maxScroll > 0.95) {
+        document.getElementById('redirect-button').style.display = 'block'; // Afficher le bouton
+    } else {
+        document.getElementById('redirect-button').style.display = 'none'; // Cacher le bouton
+    }
+});
